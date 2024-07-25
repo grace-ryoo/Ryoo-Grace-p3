@@ -7,6 +7,16 @@
 
 #define BUFFSIZE 4096
 
+/**
+ *
+ *
+ */
+void parse_cmd(const char *cmd, char ***argv)
+{
+	int argc = 0;
+
+} // parse_cmd
+
 /* Retrieve the hostname and make sure that this program is not being run on the main odin server.
  * It must be run on one of the vcf cluster nodes (vcf0 - vcf3).
  */
@@ -21,6 +31,10 @@ void check()
         } // if
 } // check
 
+/**
+ *
+ *
+ */
 int main()
 {
 	check();
@@ -52,7 +66,8 @@ int main()
 			// command line argument array needs to be
 			// ["head", "-n", "1", "file.txt", NULL].
 			
-			
+			char **argv;
+			parse_cmd(cmd, &argv);	
 			
 			// Lab 07 TODO: if the command contains input/output direction operators
 			// such as "head -n 1 < input.txt > output.txt", then the command
