@@ -38,7 +38,7 @@ int main()
 
 
 
-	// inifite loop that repeated prompts the user to enter a command
+	// infinite loop that repeated prompts the user to enter a command
 	while (1) {
 		printf("1730sh:");
 		// Project 3 TODO: display the current working directory as part of the prompt
@@ -65,10 +65,6 @@ int main()
 				token = strtok(NULL, " ");
 			} // while
 			argv[argc] = NULL;
-
-
-
-
 
 
 			// Lab 07 TODO: if the command contains input/output direction operators
@@ -100,9 +96,13 @@ int main()
 					perror("fork");
 					return EXIT_FAILURE;
 				} else if (pid == 0) { // in child process
-
+					if (execvp(argv[1], argv + 1) == -1) {
+						perror("execvp");
+						return EXIT_FAILURE;
+					} // if
 				} else { // in parent process
-
+					int status;
+					wait(&status);
 				} // if
 				
 				
