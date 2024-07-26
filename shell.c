@@ -7,16 +7,6 @@
 
 #define BUFFSIZE 4096
 
-/**
- *
- *
- */
-void parse_cmd(const char *cmd, char ***argv)
-{
-	int argc = 0;
-
-} // parse_cmd
-
 /* Retrieve the hostname and make sure that this program is not being run on the main odin server.
  * It must be run on one of the vcf cluster nodes (vcf0 - vcf3).
  */
@@ -66,9 +56,21 @@ int main()
 			// command line argument array needs to be
 			// ["head", "-n", "1", "file.txt", NULL].
 			
-			char **argv;
-			parse_cmd(cmd, &argv);	
+			char *argv[BUFFSIZE / 2];
+			int argc = 0;
 			
+			char *token = strtok(cmd, " ");
+			while (token != NULL && argc < BUFFSIZE / 2 - 1) {
+				argv[argc++] = token;
+				token = strtok(NULL, " ");
+			} // while
+			argv[argc] = NULL;
+
+
+
+
+
+
 			// Lab 07 TODO: if the command contains input/output direction operators
 			// such as "head -n 1 < input.txt > output.txt", then the command
 			// line argument array required by execvp() needs to be
@@ -79,7 +81,9 @@ int main()
 			
 			// Lab 06 TODO: if the command is "exit", quit the program
 			 
-			 
+			if (strcmp(cmd, "exit") == 0) {
+       				break;	
+	//		} else if (strcmp(cmd, "cd") == 0) {		
 			 
 			// Project 3 TODO: else if the command is "cd", then use chdir(2) to
 			// to support change directory functionalities
@@ -89,8 +93,18 @@ int main()
 			// Lab 06 TODO: else, for all other commands, fork a child process and let
 			// the child process execute user-specified command with its options/arguments.
 			// NOTE: fork() only needs to be called once. DO NOT CALL fork() more than one time.
+			} else {
+				pid_t pid;
 			
-			
+				if ((pid = fork()) < 0) { // error
+					perror("fork");
+					return EXIT_FAILURE;
+				} else if (pid == 0) { // in child process
+
+				} else { // in parent process
+
+				} // if
+				
 				
 				// Lab 07 TODO: inside the child process, use dup2(2) to redirect
 				// standard input and output as specified by the user command
@@ -106,6 +120,7 @@ int main()
 				// Lab 06 TODO: inside the parent process, wait for the child process
 				// You are not required to do anything special with the child's 
 				// termination status
+			} // if
 
 		} // if
 	} // while
