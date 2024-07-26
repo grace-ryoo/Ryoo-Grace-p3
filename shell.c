@@ -35,8 +35,7 @@ int main()
 	// Project 3 TODO: set the current working directory to the user home directory upon initial launch of the shell
 	// You may use getenv("HOME") to retrive the user home directory
 
-
-
+	chdir(getenv("HOME"));
 
 	// infinite loop that repeated prompts the user to enter a command
 	while (1) {
@@ -74,7 +73,7 @@ int main()
 				token = strtok(NULL, " ");
 
 			} // while
-			argv[argc] = NULL;
+			argv[argc] = NULL; // last item of argv set to NULL
 
 
 			// Lab 07 TODO: if the command contains input/output direction operators
@@ -110,26 +109,26 @@ int main()
 						int fd = open(inputf, O_RDONLY);
 						if (fd == -1) {
 							perror("open");
-							return EXIT_FAILURE;
+							exit(EXIT_FAILURE);
 						} // if
 
 						if (dup2(fd, STDIN_FILENO) == -1) {
 							perror("dup2");
-							return EXIT_FAILURE;
+							exit(EXIT_FAILURE);
 						} // if
 						close(fd);
 					} // if
 					
 					if (outputf) {
-						int fd = open(inputf, O_RDONLY);
+						int fd = open(outputf, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 						if (fd == -1) {
 							perror("open");
-							return EXIT_FAILURE;
+							exit(EXIT_FAILURE);
 						} // if
 
 						if (dup2(fd, STDOUT_FILENO) == -1) {
 							perror("dup2");
-							return EXIT_FAILURE;
+							exit(EXIT_FAILURE);
 						} // if
 						close(fd);
 					} // if
@@ -163,5 +162,7 @@ int main()
 
 		} // if
 	} // while
+
+	return 0;
 
 } // main
