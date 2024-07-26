@@ -58,11 +58,21 @@ int main()
 			
 			char *argv[BUFFSIZE / 2];
 			int argc = 0;
-			
+			char *inputf = NULL;
+			char *outputf = NULL;	
 			char *token = strtok(cmd, " ");
+
 			while (token != NULL && argc < BUFFSIZE / 2 - 1) {
-				argv[argc++] = token;
+				if (strcmp(token, "<") == 0) {
+					inputf = strtok(NULL, " ");
+				} else if (strcmp(token, ">") == 0) {
+					outputf = strtok(NULL, " ");
+				} else {
+					argv[argc++] = token;
+				} // if
+				
 				token = strtok(NULL, " ");
+
 			} // while
 			argv[argc] = NULL;
 
@@ -96,6 +106,35 @@ int main()
 					perror("fork");
 					return EXIT_FAILURE;
 				} else if (pid == 0) { // in child process
+					if (inputf) {
+						int fd = open(inputf, O_RDONLY);
+						if (fd == -1) {
+							perror("open");
+							return EXIT_FAILURE;
+						} // if
+
+						if (dup2(fd, STDIN_FILENO) == -1) {
+							perror("dup2");
+							return EXIT_FAILURE;
+						} // if
+						close(fd);
+					} // if
+					
+					if (outputf) {
+						int fd = open(inputf, O_RDONLY);
+						if (fd == -1) {
+							perror("open");
+							return EXIT_FAILURE;
+						} // if
+
+						if (dup2(fd, STDOUT_FILENO) == -1) {
+							perror("dup2");
+							return EXIT_FAILURE;
+						} // if
+						close(fd);
+					} // if
+
+					
 					if (execvp(argv[1], argv + 1) == -1) {
 						perror("execvp");
 						return EXIT_FAILURE;
