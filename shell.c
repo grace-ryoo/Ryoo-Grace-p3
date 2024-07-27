@@ -149,9 +149,9 @@ int main()
 					} // if
 
 					
-					if (execvp(argv[1], argv + 1) == -1) {
+					if (execvp(argv[0], argv) == -1) {
 						perror("execvp");
-						return EXIT_FAILURE;
+						exit(EXIT_FAILURE);
 					} // if
 				} else { // in parent process
 					int status;
