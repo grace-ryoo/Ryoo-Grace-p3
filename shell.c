@@ -7,6 +7,38 @@
 
 #define BUFFSIZE 4096
 
+/*
+ *
+ *
+ */
+void print_directory()
+{
+	char cwd[BUFFSIZE];
+	if (getcwd(cwd, sizeof(cwd)) == NULL) {
+		perror("getcwd");
+		exit(EXIT_FAILURE);
+	} // if
+
+	const char *hdir = getenv("HOME");
+	if (hdir == NULL) {
+		perror("getenv");
+		exit(EXIT_FAILURE);
+	} // if
+	
+	setbuf(stdout, NULL);
+	printf("1730sh: ");
+	
+	int skip_len = strlen(hdir);
+	if (strstr(cwd, hdir) == cwd) {
+		printf("~%s$ ", cwd + skip_len);
+	} else {
+		printf("%s$ ", cwd);
+	} // if
+
+
+} // print_directory
+
+
 /* Retrieve the hostname and make sure that this program is not being run on the main odin server.
  * It must be run on one of the vcf cluster nodes (vcf0 - vcf3).
  */
@@ -39,18 +71,10 @@ int main()
 
 	// infinite loop that repeated prompts the user to enter a command
 	while (1) {
-		printf("1730sh:");
 		// Project 3 TODO: display the current working directory as part of the prompt
 		
-		char cwd[BUFFSIZE];
-		if (getcwd(cwd, sizeof(cwd)) == NULL) {
-			perror("getcwd");
-			exit(EXIT_FAILURE);
-		} else {
-			printf("%s$ ", cwd);
-		} // if
-
-		printf("$ ");
+		print_directory();
+	
 		n = read(STDIN_FILENO, cmd, BUFFSIZE);
 
 		// if user enters a non-empty command
