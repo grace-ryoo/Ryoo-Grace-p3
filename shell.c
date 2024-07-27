@@ -41,6 +41,15 @@ int main()
 	while (1) {
 		printf("1730sh:");
 		// Project 3 TODO: display the current working directory as part of the prompt
+		
+		char cwd[BUFFSIZE];
+		if (getcwd(cwd, sizeof(cwd)) == NULL) {
+			perror("getcwd");
+			exit(EXIT_FAILURE);
+		} else {
+			printf("%s$ ", cwd);
+		} // if
+
 		printf("$ ");
 		n = read(STDIN_FILENO, cmd, BUFFSIZE);
 
@@ -88,13 +97,19 @@ int main()
 			 
 			if (strcmp(cmd, "exit") == 0) {
        				break;	
-	//		} else if (strcmp(cmd, "cd") == 0) {		
+			} else if (strcmp(cmd, "cd") == 0) {		
 			 
 			// Project 3 TODO: else if the command is "cd", then use chdir(2) to
 			// to support change directory functionalities
-			
-			
-			
+				if (argc > 1) {
+					if (chdir(argv[1]) == -1) {
+						perror("chdir");
+					} // if
+				} else {
+					if (chdir(getenv("HOME")) == -1) {
+						perror("chdir");
+					} // if
+				} // if
 			// Lab 06 TODO: else, for all other commands, fork a child process and let
 			// the child process execute user-specified command with its options/arguments.
 			// NOTE: fork() only needs to be called once. DO NOT CALL fork() more than one time.
