@@ -100,7 +100,14 @@ int main()
 				} else if (strcmp(token, ">") == 0) {
 					outputf = strtok(NULL, " ");
 				} else {
-					argv[argc++] = token;
+					if (token[0] == '~') {
+						char exp_path[BUFFSIZE];
+						int size_ep = sizeof(exp_path);
+						snprintf(exp_path, size_ep, "%s%s", getenv("HOME"), token + 1);
+						argv[argc++] = strdup(exp_path);
+					} else {
+						argv[argc++] = token;
+					} // if
 				} // if
 				
 				token = strtok(NULL, " ");
