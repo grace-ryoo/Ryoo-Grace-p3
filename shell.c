@@ -98,6 +98,8 @@ int main()
 					inputf = strtok(NULL, " ");
 				} else if (strcmp(token, ">") == 0) {
 					outputf = strtok(NULL, " ");
+				} else if (strcmp(token, ">>") == 0) {
+					outputf = strtok(NULL, " ");
 				} else {
 					if (token[0] == '~') {
 						char exp_path[BUFFSIZE];
