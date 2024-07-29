@@ -37,6 +37,19 @@ void print_directory()
 
 } // print_directory
 
+/**
+ * Use free() to deallocate dynamically allocated memory. 
+ *
+ * @param argv
+ * @param argc The total number of command line arguments.
+ */
+void memory_free(char **argv, int argc) 
+{
+	for (int i = 0; i < argc; i++) {
+		free(argv[i]);
+	} // for
+
+} // memory_free
 
 /* Retrieve the hostname and make sure that this program is not being run on the main odin server.
  * It must be run on one of the vcf cluster nodes (vcf0 - vcf3).
