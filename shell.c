@@ -8,8 +8,7 @@
 #define BUFFSIZE 4096
 
 /*
- *
- *
+ * Displays the current working directory. Replaces the user's home directory with '~'.
  */
 void print_directory()
 {
@@ -54,8 +53,8 @@ void check()
 } // check
 
 /**
- *
- *
+ * Parses and processes commands from standard input. The shell prompts for commands, changes directories, handles errors, 
+ * launches processes, and redirects I/O. The shell forks a child process to execute commands/arguments.
  */
 int main()
 {
