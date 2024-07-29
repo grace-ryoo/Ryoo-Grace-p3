@@ -90,7 +90,8 @@ int main()
 			char *argv[BUFFSIZE / 2];
 			int argc = 0;
 			char *inputf = NULL;
-			char *outputf = NULL;	
+			char *outputf = NULL;
+			char *outputa = NULL;	
 			char *token = strtok(cmd, " ");
 
 			while (token != NULL && argc < BUFFSIZE / 2 - 1) {
@@ -99,7 +100,7 @@ int main()
 				} else if (strcmp(token, ">") == 0) {
 					outputf = strtok(NULL, " ");
 				} else if (strcmp(token, ">>") == 0) {
-					outputf = strtok(NULL, " ");
+					outputa = strtok(NULL, " ");
 				} else {
 					if (token[0] == '~') {
 						char exp_path[BUFFSIZE];
@@ -180,6 +181,19 @@ int main()
 						close(fd);
 					} // if
 
+					if (outputa) {
+						int fd = open(outputa, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+						if (fd == -1) {
+							perror("open");
+							exit(EXIT_FAILURE);
+						} // if
+
+						if (dup2(fd, STDOUT_FILENO) == -1) {
+							perror("dup2");
+							exit(EXIT_FAILURE);
+						} // if
+						close(fd);
+					} // if
 					
 					if (execvp(argv[0], argv) == -1) {
 						perror("execvp");
