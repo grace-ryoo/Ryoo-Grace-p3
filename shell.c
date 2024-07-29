@@ -38,15 +38,17 @@ void print_directory()
 } // print_directory
 
 /**
- * Use free() to deallocate dynamically allocated memory. 
+ * Free dynamically allocated memory. 
  *
- * @param argv
+ * @param argv The array of command line argument strings.
  * @param argc The total number of command line arguments.
  */
-void memory_free(char **argv, int argc) 
+void memory_free(char **argv, int argc, int *free_list) 
 {
 	for (int i = 0; i < argc; i++) {
-		free(argv[i]);
+		if (free_list) {
+			free(argv[i]);
+		} // if
 	} // for
 
 } // memory_free
@@ -101,6 +103,7 @@ int main()
 			// ["head", "-n", "1", "file.txt", NULL].
 			
 			char *argv[BUFFSIZE / 2];
+			int free_list[BUFFSIZE / 2] = {0};
 			int argc = 0;
 			char *inputf = NULL;
 			char *outputf = NULL;
@@ -119,10 +122,13 @@ int main()
 						char exp_path[BUFFSIZE];
 						int size_ep = sizeof(exp_path);
 						snprintf(exp_path, size_ep, "%s%s", getenv("HOME"), token + 1);
-						argv[argc++] = strdup(exp_path);
+						argv[argc] = strdup(exp_path);
+						free_list[argc] = 1;
 					} else {
-						argv[argc++] = token;
+						argv[argc] = token;
+						free_list[argc] = 0;
 					} // if
+					argc++;
 				} // if
 				
 				token = strtok(NULL, " ");
@@ -142,6 +148,7 @@ int main()
 			// Lab 06 TODO: if the command is "exit", quit the program
 			 
 			if (strcmp(cmd, "exit") == 0) {
+				memory_free(argv, argc, free_list);
        				break;	
 			} else if (strcmp(cmd, "cd") == 0) {		
 			 
@@ -164,6 +171,7 @@ int main()
 			
 				if ((pid = fork()) < 0) { // error
 					perror("fork");
+					memory_free(argv, argc, free_list);
 					return EXIT_FAILURE;
 				} else if (pid == 0) { // in child process
 					if (inputf) {
@@ -233,8 +241,11 @@ int main()
 				// You are not required to do anything special with the child's 
 				// termination status
 			} // if
+			
+			memory_free(argv, argc, free_list);
 
 		} // if
+		
 	} // while
 
 	return 0;
