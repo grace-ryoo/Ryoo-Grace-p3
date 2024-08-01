@@ -42,15 +42,15 @@ void print_directory()
  *
  * @param argv The array of command line argument strings.
  * @param argc The total number of command line arguments.
+ * @param free_list An array of 0's and 1's indicating the argv elements to free or not free.
  */
 void memory_free(char **argv, int argc, int *free_list) 
 {
 	for (int i = 0; i < argc; i++) {
-		if (free_list) {
+		if (free_list[i]) {
 			free(argv[i]);
 		} // if
-	} // for
-
+	} // for 
 } // memory_free
 
 /* Retrieve the hostname and make sure that this program is not being run on the main odin server.
